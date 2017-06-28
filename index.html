@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>AngularJs &bull; TodoMVC</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script type="text/javascript" src="js/main.js"></script>
     <script type="text/javascript" src="js/filterTasks.js"></script>
     <script type="text/javascript" src="js/clearCompleted.js"></script>
@@ -34,40 +35,5 @@
 
     </footer>
 
-
-    <script>
-
-        var ENTER_KEY_CODE = 13;
-        var task = null;
-
-        document.getElementById("add-task-input")
-            .addEventListener("keydown", function(event) {
-                if (event.keyCode == ENTER_KEY_CODE) {
-                    event.preventDefault();
-                    task = this.form["input"].value;
-                    addTask();
-                }
-            });
-
-        document.getElementById("arrow")
-            .addEventListener("click", function() {
-                var elements = document.getElementsByClassName("new-task");
-                for(var j=0;j<elements.length;j++) {
-                    var task = elements[j];
-                    var checkInput = task.getElementsByClassName("checkbox")[0];
-
-                    if (this.checked && !checkInput.checked){
-                        checkInput.checked = true;
-                        onCheck(checkInput, task);
-                    }
-
-                    if (!this.checked){
-                        checkInput.checked = false;
-                        onCheck(checkInput, task);
-                    }
-                }
-            });
-
-    </script>
 </body>
 </html>

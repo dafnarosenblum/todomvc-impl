@@ -3,49 +3,50 @@
  */
 
 function onXClicked(newDiv) {
-    var checkInput = newDiv.childNodes[0];
-    if (checkInput.checked) {
+    var checkInput = newDiv.find("input");
+    if (checkInput.is(":checked")) {
         completedCounter--;
     } else {
         activeTasksCounter--;
-        document.getElementById("tasks-counter").innerHTML = activeTasksCounter + " item" + addS() + " left";
+        $("#tasks-counter").text(activeTasksCounter + " item" + addS() + " left");
     }
-    if (completedCounter == 0) {
-        var clearCompleted = document.getElementById("clear-completed");
+    if (completedCounter === 0) {
+        var clearCompleted = $("#clear-completed");
         makeHidden(clearCompleted, false);
-        if (activeTasksCounter == 0) {
-            makeHidden(document.getElementById("arrow"), false);
-            document.getElementById("task-manager-footer").remove();
+        if (activeTasksCounter === 0) {
+            makeHidden($("#arrow"), false);
+            $("#arrow").prop('checked', false);
+            $("#task-manager-footer").remove();
         }
     }
 
     newDiv.remove();
 }
 
-function addX(newDiv){
-    var x = document.createElement("span");
-    x.setAttribute("id", "x");
-    x.innerHTML = "&#10005;";
+function addX(newDiv, tasksManager){
+    var x = $("<span></span>");
+    x.addClass("x");
+    x.attr("id", "x" + taskNextId);
+    x.append("&#10005;");
 
-    x.addEventListener("click", function() {
-        onXClicked(newDiv);
+    tasksManager.on("click", "#x" + taskNextId, function(){
+        onXClicked(newDiv)
     });
-
-    newDiv.appendChild(x);
+    newDiv.append(x);
 }
 
 function updateTaskCounterDisplayedText() {
-    document.getElementById("tasks-counter").innerHTML = activeTasksCounter + " item" + addS() + " left";
+    $("#tasks-counter").text(activeTasksCounter + " item" + addS() + " left");
 }
 
 function onCheck(checkInput, newDiv){
-    if (checkInput.checked){
-        newDiv.classList.remove("active");
+    if (checkInput.is(":checked")){
+        newDiv.removeClass("active");
         activeTasksCounter--;
         completedCounter++;
 
     } else {
-        newDiv.classList.add("active");
+        newDiv.addClass("active");
         activeTasksCounter++;
         completedCounter--;
     }
@@ -53,20 +54,23 @@ function onCheck(checkInput, newDiv){
     validateClearCompletedStatus();
 }
 
-function addCheckbox(newDiv){
-    document.getElementById("arrow").checked = false;
-    var checkInput = document.createElement("input");
-    checkInput.setAttribute("type", "checkbox");
-    checkInput.classList.add("checkbox");
-    checkInput.addEventListener("click", function() {
+function addCheckbox(newDiv, tasksManager){
+    $("#arrow").attr('checked', false);
+    var checkInput = $("<input>");
+    checkInput.attr("type", "checkbox");
+    checkInput.addClass("checkbox");
+    var id = "checkbox" + taskNextId;
+    checkInput.attr("id", id);
+    tasksManager.on("click", "#" + id, function() {
         onCheck(checkInput, newDiv);
     });
-
-    var text = document.createElement("label");
-    text.classList.add("strikethrough");
-    text.innerHTML = task;
+    taskNextId++;
+    $("#tasks-manager div input[type=checkbox]").unbind( "click" );
+    var labelText = $("<label></label>");
+    labelText.addClass("strikethrough");
+    labelText.text($("#add-task-input").val());
     activeTasksCounter++;
 
-    newDiv.appendChild(checkInput);
-    newDiv.appendChild(text);
+    newDiv.append(checkInput);
+    newDiv.append(labelText);
 }

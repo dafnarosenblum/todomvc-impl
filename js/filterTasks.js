@@ -3,47 +3,46 @@
  */
 
 function filterHandler(condition) {
-    var elements = document.getElementsByClassName("new-task");
-    for (var j = 0; j < elements.length; j++) {
-        e = elements[j];
+    $(".new-task").each(function (i, e){
         if (condition(e)) {
-            makeVisible(e);
+            makeVisible($(this));
         } else {
-            makeHidden(e, true);
+            makeHidden($(this), true);
         }
-    }
-    ;
+    });
 }
-function addFilterButtons(taskManagerFooter) {
-    var filterParent = document.createElement("span");
+
+function addFilterButtons(taskManagerFooter, tasksManager) {
+    var filterParent = $("<span></span>");
 
     var filterConfig = [
-        ["All", function (element) { return true }],
+        ["All", function () { return true }],
         ["Active", function (element) { return element.classList.contains("active") }],
         ["Completed", function (element) { return !element.classList.contains("active"); }]
     ];
 
     var filterButtons = [];
     for (var i=0; i<3; i++){
-        var filter = document.createElement("button");
-        filter.innerHTML = filterConfig[i][0];
-        filter.setAttribute("type", "button");
-        filter.classList.add("filter-button");
+        var filter = $("<button></button>");
+        filter.text(filterConfig[i][0]);
+        filter.attr("type", "button");
+        filter.attr("id", filterConfig[i][0]);
+        filter.addClass("filter-button");
         filterButtons.push(filter);
-        filterParent.appendChild(filter);
+        filterParent.append(filter);
     }
 
-    filterButtons[0].addEventListener("click", function () {
+    tasksManager.on("click", "#task-manager-footer span #All", function () {
         filterHandler(filterConfig[0][1]);
     });
 
-    filterButtons[1].addEventListener("click", function () {
+    tasksManager.on("click", "#task-manager-footer span #Active", function () {
         filterHandler(filterConfig[1][1]);
     });
 
-    filterButtons[2].addEventListener("click", function () {
+    tasksManager.on("click", "#task-manager-footer span #Completed", function () {
         filterHandler(filterConfig[2][1]);
     });
 
-    taskManagerFooter.appendChild(filterParent);
+    taskManagerFooter.append(filterParent);
 }

@@ -4,56 +4,80 @@
 
 var activeTasksCounter = 0;
 var completedCounter = 0;
+var ENTER_KEY_CODE = 13;
+var taskNextId = 0;
+var task = null;
+
 
 function addTask(){
-    var newTask = document.createElement("div");
-    newTask.classList.add("new-task");
-    newTask.classList.add("active");
-    changeShadow(newTask);
-    addCheckbox(newTask);
-    addX(newTask);
-    makeVisible(document.getElementById("arrow"));
+    var tasksManager = $("#tasks-manager");
 
-    var tasksManager = document.getElementById("tasks-manager");
-    tasksManager.appendChild(newTask);
+    var newTask = $("<div></div>").addClass("new-task active");
+    changeShadow(newTask);
+    addCheckbox(newTask, tasksManager);
+    addX(newTask, tasksManager);
+    makeVisible($("#arrow"));
+
+    tasksManager.append(newTask);
     clearAddTaskInput();
 
-    var footer = document.getElementById("task-manager-footer");
+    var footer = $("#task-manager-footer");
     if (footer != null) { footer.remove() };
     addTaskManagerFooter(tasksManager);
 }
 
 function addTaskManagerFooter(taskManager) {
-    var bottomDiv = document.createElement("div");
-    bottomDiv.setAttribute("id", "task-manager-footer");
+    var bottomDiv = $("<div></div>");
+    bottomDiv.attr("id", "task-manager-footer");
 
-    var span = document.createElement("span");
-    span.setAttribute("id", "tasks-counter");
-    span.innerHTML = activeTasksCounter + " item" + addS() + " left";
-    bottomDiv.appendChild(span);
+    var span = $("<span></span>");
+    span.attr("id", "tasks-counter");
+    span.text(activeTasksCounter + " item" + addS() + " left");
+    bottomDiv.append(span);
 
-    addFilterButtons(bottomDiv);
+    addFilterButtons(bottomDiv, taskManager);
 
-    var clearCompleted = document.createElement("button");
-    clearCompleted.innerHTML = "Clear completed";
-    clearCompleted.setAttribute("type", "button");
-    clearCompleted.setAttribute("id", "clear-completed");
+    var clearCompleted = $("<button></button>");
+    clearCompleted.text("Clear completed");
+    clearCompleted.attr("type", "button");
+    clearCompleted.attr("id", "clear-completed");
     if (completedCounter == 0){
-        clearCompleted.classList.add("hidden");
+        clearCompleted.addClass("hidden");
     }
-    clearCompleted.addEventListener("click", function(){
-        onClearCompleted();
-    });
-    bottomDiv.appendChild(clearCompleted);
+    clearCompleted.click(function() {onClearCompleted()});
+    bottomDiv.append(clearCompleted);
 
-    taskManager.appendChild(bottomDiv);
+    taskManager.append(bottomDiv);
 }
 
 function changeShadow(newDiv) {
-    newDiv.classList.add("box-shadow");
-    var addTask = document.getElementById("add-task");
-    addTask.classList.remove("box-shadow");
+    newDiv.addClass("box-shadow");
+    $("#add-task").removeClass("box-shadow");
 }
 
+$(document).ready(function() {
+    $("#add-task-input").keydown(function (event) {
+        if (event.keyCode === ENTER_KEY_CODE) {
+            event.preventDefault();
+            addTask();
+        }
+    });
+
+    $("#arrow").change(function(){
+        $(".new-task").each(function(i, task){
+            var checkInput = $(this).find(".checkbox");
+
+            if ($("#arrow").is(":checked") && !checkInput.is(":checked")){
+                checkInput.attr('checked', true);
+                onCheck(checkInput, $(this));
+            }
+
+            if (!$("#arrow").is(":checked")){
+                checkInput.attr('checked', false);
+                onCheck(checkInput, $(this));
+            }
+        });
+    });
+});
 
 

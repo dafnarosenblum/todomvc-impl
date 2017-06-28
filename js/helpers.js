@@ -3,26 +3,26 @@
  */
 
 function makeHidden(e, veryHidden) {
-    if (!e.classList.contains("hidden")) {
+    if (!e.hasClass("hidden")) {
         if (veryHidden){
-            e.classList.add("very-hidden");
+            e.addClass("very-hidden");
         } else {
-            e.classList.add("hidden");
+            e.addClass("hidden");
         }
-        e.classList.remove("visible");
+        e.removeClass("visible");
     }
 }
 
 function makeVisible(e) {
-    if (!e.classList.contains("visible")) {
-        e.classList.add("visible");
+    if (!e.hasClass("visible")) {
+        e.addClass("visible");
     }
-    e.classList.remove("very-hidden");
-    e.classList.remove("hidden");
+    e.removeClass("very-hidden");
+    e.removeClass("hidden");
 }
 
 function clearAddTaskInput() {
-    document.getElementById("add-task-input").value = "";
+    $("#add-task-input").val("");
 }
 
 var addS = function (){

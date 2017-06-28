@@ -3,7 +3,7 @@
  */
 
 function validateClearCompletedStatus() {
-    if (completedCounter == 0){
+    if (completedCounter === 0){
         changeClearCompletedVisibility(false);
     } else {
         changeClearCompletedVisibility(true);
@@ -11,32 +11,31 @@ function validateClearCompletedStatus() {
 }
 
 function changeClearCompletedVisibility(changeToVisible){
-    var clearCompleted = document.getElementById("clear-completed");
+    var clearCompleted = $("#clear-completed");
     var toAdd = "hidden";
     var toRemove = "visible";
     if (changeToVisible){
         var toAdd = "visible"
         var toRemove = "hidden";
     }
-    clearCompleted.classList.add(toAdd);
-    clearCompleted.classList.remove(toRemove);
+    clearCompleted.addClass(toAdd);
+    clearCompleted.removeClass(toRemove);
 }
 
 function onClearCompleted() {
-    var elements = document.getElementsByClassName("new-task");
     var toRemove = [];
-    for (var j = 0; j < elements.length; j++) {
-        e = elements[j];
+    $(".new-task").each(function(i, e){
         if (!e.classList.contains("active")) {
             toRemove.push(e);
         }
-    }
+    })
+
     toRemove.forEach(function (e) {
-        e.remove()
+        e.remove();
     });
     completedCounter = 0;
-    if (activeTasksCounter == 0) {
-        document.getElementById("task-manager-footer").remove();
-        makeHidden(document.getElementById("arrow"), false);
+    if (activeTasksCounter === 0) {
+        $("#task-manager-footer").remove();
+        makeHidden($("#arrow"), false);
     }
 }
