@@ -1,0 +1,33 @@
+<div id="tasks-manager">
+    <form ng-submit="vm.submit()">
+        <div id="add-task" class="box-shadow">
+            <input id="arrow" type="checkbox" ng-model="master" ng-class="{ hidden: vm.todoList.length == 0 }">
+            <input type="text" ng-model="vm.newTodo" id="add-task-input" name="input" placeholder="What needs to be done?">
+        </div>
+    </form>
+    <div class="new-task" ng-repeat="todo in vm.todoList | filter:completedFilter">
+        <input type="checkbox" ng-checked="master || todo.isCompleted" ng-model="todo.isCompleted"/>
+        <label class="strikethrough" ng-bind="todo.text"></label>
+        <remove-task on-remove="vm.removeTodo(todo)"></remove-task>
+    </div>
+    <div id="task-manager-footer" ng-class="{ hidden: vm.todoList.length == 0 }">
+        <label id="tasks-counter">{{vm.activeTasks()}} item{{vm.activeTasks() <= 1? '':'s'}}</label>
+        <span>
+            <button class="filter-button" ng-click="completedFilter = ''">All</button>
+            <button class="filter-button" ng-click="completedFilter = {isCompleted:false}">Active</button>
+            <button class="filter-button" ng-click="completedFilter = {isCompleted:true}">Completed</button>
+        </span>
+        <button id="clear-completed" ng-class="{ hidden: vm.hasNoCompleted() }" ng-click="vm.clearCompleted()">Clear completed</button>
+    </div>
+</div>
+<footer>
+    <p>
+    <div>Double-click to edit a todo</div>
+    <div>Credits:&nbsp;<a href="https://twitter.com/cburgdorf">Christoph Burgdorf</a>,&nbsp;
+        <a href="https://ericbidelman.tumblr.com/">Eric Bidelman</a>,&nbsp;
+        <a href="http://jacobmumm.com/">Jacob Mumm</a>&nbsp;and&nbsp;
+        <a href="http://blog.igorminar.com/">Igor Minar</a></div>
+    <div>Part of&nbsp;<a href="http://todomvc.com/">TodoMVC</a></div>
+    </p>
+
+</footer>
